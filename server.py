@@ -57,15 +57,16 @@ class logic:
 		retVal = []
 		temp = []
 
-		for courier, deliveries in self.brd.iteritems():
-			temp = temp + [{'name': courier, 'delivery': sorted(deliveries, _cmp_delivery)[0]}]
-
-		for i in range(0, len(temp)):
-			retVal.append({i + 1: sorted(temp, 
-				key = lambda e:  e['delivery'], 
-				cmp = _cmp_delivery)[i]})
-
-		return retVal
+		if not self.brd == {}:
+			for courier, deliveries in self.brd.iteritems():
+				temp = temp + [{'name': courier, 'delivery': sorted(deliveries, _cmp_delivery)[0]}]
+				for i in range(0, len(temp)):
+					retVal.append({i + 1: sorted(temp, 
+						key = lambda e:  e['delivery'], 
+						cmp = _cmp_delivery)[i]})
+			return retVal
+		else:
+			return {}
 			
 
 	def json(self):
