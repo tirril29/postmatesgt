@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, abort
 import time
 from datetime import datetime 
+import twilio
 import postmates as pm
 
 app = Flask(__name__)
@@ -56,7 +57,7 @@ class logic:
 		retVal = []
 		temp = []
 
-		for courier, deliveries in brd.iteritems():
+		for courier, deliveries in self.brd.iteritems():
 			temp = temp + [{'name': courier, 'delivery': sorted(deliveries, _cmp_delivery)[0]}]
 
 		for i in range(0, len(temp)):
