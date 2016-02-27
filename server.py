@@ -97,7 +97,7 @@ def newest():
 
 @app.route('/leaders')
 def leaders():
-	return state.ldrbrd()[:10]
+	return jsonify(state.ldrbrd()[:10])
 
 @app.after_request
 def after_request(response):
