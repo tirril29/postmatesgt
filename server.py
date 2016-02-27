@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 class logic:
 	def __init__(self):
-		self.state = {'data':'No data so far. '}
 		self.map = {}
 		self.brd = {}
 
@@ -38,11 +37,24 @@ class logic:
 	
 	# Adds an entry to the leader board. Saves multiple runs by rider. 
 	def add(self, entry):
+		def timeDiff(a, b):
+			f = lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%SZ')
+			return f(b) - f(a)
+
+		def _cmp_delivery(d0, d1):
+			d0_time = timeDiff(d0['start_time'], d0['end_time'])
+			d1_time = timeDiff(d1['start_time'], d1['end_time'])
+			return 1 if d0_time.total_seconds() - d1_time.total_seconds() > 0 else -1
+
 		name = entry['courier']['name']
 		# Add name if it's not in the leaderboard. 
 		if not name in self.brd:
-			self.brd[name] = []
-		self.brd[name].append(entry)
+			self.brd[name] = {'best_effort': entry}
+		elif _cmp_delivery(self.brd[name]['best_effort'], entry) > 0:
+			self.brd[name] = entry
+		else:
+			# do nothing
+			return
 
 	def ldrbrd(self):
 		def timeDiff(a, b):
@@ -57,16 +69,12 @@ class logic:
 		retVal = []
 		temp = []
 
-		if not self.brd == {}:
-			for courier, deliveries in self.brd.iteritems():
-				temp = temp + [{'name': courier, 'delivery': sorted(deliveries, _cmp_delivery)[0]}]
-				for i in range(0, len(temp)):
-					retVal.append({i + 1: sorted(temp, 
-						key = lambda e:  e['delivery'], 
-						cmp = _cmp_delivery)[i]})
-			return retVal
-		else:
-			return {}
+		for k, v in self.brd.iteritems():
+			temp = temp + [{'name': k, 'best_effort': v['best_effort']}]
+
+		for i in range (0, len(temp)):
+			retVal.append({i + 1: sorted(temp, key = lambda e:  e['best_effort'], cmp = _cmp_delivery)[i]})
+		return {'leaderboard':retVal}
 			
 
 	def json(self):
@@ -97,7 +105,7 @@ def newest():
 
 @app.route('/leaders')
 def leaders():
-	return jsonify(state.ldrbrd()[:10])
+	return jsonify(state.ldrbrd()), 200
 
 @app.after_request
 def after_request(response):
