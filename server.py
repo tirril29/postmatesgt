@@ -15,9 +15,8 @@ class logic:
 		if 'status' in json and json['status'] == 'pickup_complete':
 			self.map[json['delivery_id']] = {'start_time': json['created'], 'end_time': '', 'courier': json['data']['courier']}
 		elif 'status' in json and json['status'] == 'delivered':
-			if json['delivery_id'] in self.map and self.map[json['delivery_id']['end_time'] == '':
-				self.map[json['delivery_id']['end_time'] = json['created']]
-		else:
+			if json['delivery_id'] in self.map and self.map[json['delivery_id']]['end_time'] == '':
+				self.map[json['delivery_id']]['end_time'] = json['created']
 			# do nothing
 	
 	def json(self):
