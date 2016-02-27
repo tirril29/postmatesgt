@@ -14,7 +14,7 @@ Routing
 def index():
 	return 'hello world'
 
-@app.route('/webhooks')
+@app.route('/webhooks', methods = ['POST'])
 def webhooks(request):
 	update = request.json
 	return jsonify({'value': 'success'}), 201
