@@ -4,7 +4,18 @@ import postmates as pm
 
 app = Flask(__name__)
 
-update = ""
+class logic:
+        def __init__(self):
+                self.state = {'data':'No data so far. '}
+
+        def update(self, json):
+                self.state = json
+
+        def json(self):
+                return self.state
+
+
+state = logic()
 
 '''
 Routing
@@ -15,13 +26,16 @@ def index():
 	return 'hello world'
 
 @app.route('/webhooks', methods = ['POST'])
-def webhooks(request):
-	update = request.json
-	return jsonify({'value': 'success'}), 201
+def webhooks():
+        if not request.json:
+                abort(500)
+        else:
+                state.update(request.json)
+        return jsonify({'value': 'success'}), 200
 
 @app.route('/newest')
 def newest():
-	return update
+	return jsonify(state.json()), 200
 
 @app.after_request
 def after_request(response):
@@ -31,4 +45,5 @@ def after_request(response):
   return response
 
 if __name__ == '__main__':
+        app.debug = True
 	app.run(host='0.0.0.0')
