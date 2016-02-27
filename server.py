@@ -15,7 +15,7 @@ class logic:
 		# Calculates time difference. 
 		def timeDiff(a, b):
 			f = lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%SZ')
-			return str(f(b) - f(a))
+			return f(b) - f(a)
 
 		self.state = json
 		if 'status' in json and json['status'] == 'pickup_complete':
@@ -26,10 +26,12 @@ class logic:
 				# Add finish timestamp. 
 				self.map[json['delivery_id']]['end_time'] = json['created']
 				# Calculate Time Difference. 
-				self.map[json['delivery_id']]['time'] = timeDiff(self.map[json['delivery_id']]['start_time'], 
-					self.map[json['delivery_id']]['end_time'])
+				self.map[json['delivery_id']]['time'] = str(timeDiff(self.map[json['delivery_id']]['start_time'], 
+					self.map[json['delivery_id']]['end_time']))
 				# Add to leaderboard. 
 				self.add(self.map[json['delivery_id']])
+				# TO DO: Twilio integration. 
+				# Contant the driver with some info. 
 				# Remove entry from live list. 
 				del self.map[json['delivery_id']]
 	
@@ -40,6 +42,30 @@ class logic:
 		if not name in self.brd:
 			self.brd[name] = []
 		self.brd[name].append(entry)
+
+	def ldrbrd(self):
+		def timeDiff(a, b):
+			f = lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%SZ')
+			return f(b) - f(a)
+
+		def _cmp_delivery(d0, d1):
+			d0_time = timeDiff(d0['start_time'], d0['end_time'])
+			d1_time = timeDiff(d1['start_time'], d1['end_time'])
+			return 1 if d0_time.total_seconds() - d1_time.total_seconds() > 0 else -1
+
+		retVal = []
+		temp = []
+
+		for courier, deliveries in brd.iteritems():
+			temp = temp + [{'name': courier, 'delivery': sorted(deliveries, _cmp_delivery)[0]}]
+
+		for i in range(0, len(temp)):
+			retVal.append({i + 1: sorted(temp, 
+				key = lambda e:  e['delivery'], 
+				cmp = _cmp_delivery)[i]})
+
+		return retVal
+			
 
 	def json(self):
 		return {'map': self.map, 'brd': self.brd}
@@ -66,6 +92,10 @@ def webhooks():
 @app.route('/newest')
 def newest():
 	return jsonify(state.json()), 200
+
+@app.route('/leaders')
+def leaders():
+	return state.ldrbrd()[:10]
 
 @app.after_request
 def after_request(response):
