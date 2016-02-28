@@ -30,7 +30,7 @@ class logic:
 		def _sub_delivery(d0, d1):
 			d0_time = timeDiff(d0['start_time'], d0['end_time'])
 			d1_time = timeDiff(d1['start_time'], d1['end_time'])
-			return d0_time.total_seconds() - d1_time.total_seconds()
+			return str(d0_time - d1_time)
 
 		self.state = json
 		if 'status' in json and json['status'] == 'pickup_complete':
@@ -58,15 +58,15 @@ class logic:
 					if current_leader['1']['best_effort']['courier']['name'] == me['best_effort']['courier']['name']:
 						msg = msg + "you are the new leader! You set a record of " + current_leader['1']['best_effort']['time'] + '.\n'
 					else:
-						msg = "you set a personal record! You are " + _sub_delivery(current_leader['1']['best_effort'], me['best_effort']) + " behind the current leader.\n"
+						msg = msg + "you set a personal record! You are " + _sub_delivery(me['best_effort'], current_leader['1']['best_effort']) + " behind the current leader.\n"
 				else:
-					msg = "you are " + _sub_delivery(me['best_effort'], self.map[json['delivery_id']]) + " behind your personal record. "
+					msg = msg + "you are " + _sub_delivery(me['best_effort'], self.map[json['delivery_id']]) + " behind your personal record. "
 					# You set a new PR! You are x off from the leader. 
 					# You are X off from your personal record. 
-				phone_number = '13476337300'
+				phone_number = '3476337300'
 				if not me['best_effort']['courier']['phone_number'] == '':
 					phone_number = me['best_effort']['courier']['phone_number']
-				message = self.twilio.messages.create(to='+' + phone_number, from_="+16262437676", body=msg)
+				message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
 
 				print msg
 				# TO DO: Twilio integration. 
@@ -122,6 +122,9 @@ class logic:
 	def json(self):
 		return {'map': self.map, 'brd': self.brd}
 
+	def jobs(self):
+		return {'job': k for k, _ in map}
+
 
 state = logic()
 
@@ -148,6 +151,10 @@ def newest():
 @app.route('/leaders')
 def leaders():
 	return jsonify(state.ldrbrd()), 200
+
+@app.route('/jobs')
+def jobs():
+	return jsonify(state.jobs()), 200
 
 @app.after_request
 def after_request(response):
