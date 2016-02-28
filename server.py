@@ -160,7 +160,7 @@ def leaders():
 def jobs():
 	return jsonify(state.jobs()), 200
 
-@app.route('/deleteall')
+@app.route('/deleteall', methods = ['DELETE'])
 def deleteall():
         return jsonify(state.delall()), 200
 
