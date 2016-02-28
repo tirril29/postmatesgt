@@ -13,8 +13,8 @@ function loadDoc(url) {
 	    row += "<td>" + count + "</td>";
 	    var img = json.leaderboard[i][count].best_effort.courier.img_href;
 	    row += "<td><img src=" + img + "></img></td>";
-	    row += "<td>" + json.leaderboard[i][count].best_effort.courier.vehicle_type + "</td>";
 	    row += "<td>" + json.leaderboard[i][count].name + "</td>";
+	    row += "<td>" + json.leaderboard[i][count].best_effort.courier.vehicle_type + "</td>";
 	    row += "<td>" + json.leaderboard[i][count].best_effort.time + "</td>";
 	    row += "<td>" + json.leaderboard[i][count].best_effort.start_time + "</td>";
             row += "<td>" + json.leaderboard[i][count].best_effort.end_time + "</td>";
