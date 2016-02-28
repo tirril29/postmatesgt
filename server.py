@@ -10,8 +10,8 @@ class logic:
 	def __init__(self):
 		self.map = {}
 		self.brd = {}
-		sid = ""
-		sec = ""
+		sid = "db0dddb81c722c00f50b99b5c2"
+		sec = "9109beb0"
 
 		self.twilio = TwilioRestClient(sid, sec)
 
@@ -54,7 +54,7 @@ class logic:
 
 				if me['best_effort']['id'] == json['delivery_id']:
 					current_leader = self.current_leader()
-					print current_leader
+					#print current_leader
 					if current_leader['1']['best_effort']['courier']['name'] == me['best_effort']['courier']['name']:
 						msg = msg + "you are the new leader! You set a record of " + current_leader['1']['best_effort']['time'] + '.\n'
 					else:
@@ -123,7 +123,11 @@ class logic:
 		return {'map': self.map, 'brd': self.brd}
 
 	def jobs(self):
-		return {'job': k for k, _ in map}
+		return {'job': [k for k, _ in map.iteritems()]}
+
+        def delall(self):
+                self.map = {}
+                self.brd = {}
 
 
 state = logic()
@@ -155,6 +159,10 @@ def leaders():
 @app.route('/jobs')
 def jobs():
 	return jsonify(state.jobs()), 200
+
+@app.route('/deleteall')
+def deleteall():
+        return jsonify(state.delall()), 200
 
 @app.after_request
 def after_request(response):
