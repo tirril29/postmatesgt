@@ -156,7 +156,7 @@ class logic:
 		return {'name': name, 'best_effort': self.brd[name]['best_effort'], 'perf_hist': self.brd[name]['perf_hist']} if name in self.brd else {'value':'Failure.'}
 
 	def getusrs(self):
-		return {'users': [user for user in self.brd.iteritems()]}
+		return {'users': [k for k, _ in self.brd.iteritems()]}
 
 
 
