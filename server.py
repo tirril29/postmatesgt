@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, abort
 import time
 from datetime import datetime 
-import twilio
+from twilio.rest import TwilioRestClient
 import postmates as pm
 
 app = Flask(__name__)
@@ -10,6 +10,11 @@ class logic:
 	def __init__(self):
 		self.map = {}
 		self.brd = {}
+		sid = ""
+		sec = ""
+
+		self.twilio = TwilioRestClient(sid, sec)
+
 
 	def update(self, json):
 		# Calculates time difference. 
@@ -43,18 +48,26 @@ class logic:
 				# Add to leaderboard. 
 				self.add(me)
 
-				msg = me['courier']['name'] + ', '
+				me = self.brd[me['courier']['name']]
 
-				if me['id'] == json['delivery_id']:
+				msg = me['best_effort']['courier']['name'] + ', '
+
+				if me['best_effort']['id'] == json['delivery_id']:
 					current_leader = self.current_leader()
-					if current_leader['name'] == me['courier']['name']:
-						msg = msg + "you are the new leader! You set a record of " + current_leader['best_effort']['time'] + '.\n'
+					print current_leader
+					if current_leader['1']['best_effort']['courier']['name'] == me['best_effort']['courier']['name']:
+						msg = msg + "you are the new leader! You set a record of " + current_leader['1']['best_effort']['time'] + '.\n'
 					else:
-						msg = "you set a personal record! You are " + _sub_delivery(current_leader['best_effort'], self.brd[json['courier']['name']]['best_effort']['id']) + " behind the current leader.\n"
+						msg = "you set a personal record! You are " + _sub_delivery(current_leader['1']['best_effort'], me['best_effort']) + " behind the current leader.\n"
 				else:
-					msg = "you are " + _sub_delivery(self.brd[json['courier']['name']]['best_effort'], self.map[json['delivery_id']]) + " behind your personal record. "
+					msg = "you are " + _sub_delivery(me['best_effort'], self.map[json['delivery_id']]) + " behind your personal record. "
 					# You set a new PR! You are x off from the leader. 
 					# You are X off from your personal record. 
+				phone_number = '13476337300'
+				if not me['best_effort']['courier']['phone_number'] == '':
+					phone_number = me['best_effort']['courier']['phone_number']
+				message = self.twilio.messages.create(to='+' + phone_number, from_="+16262437676", body=msg)
+
 				print msg
 				# TO DO: Twilio integration. 
 				# Contant the driver with some info. 
@@ -99,7 +112,7 @@ class logic:
 			temp = temp + [{'name': k, 'best_effort': v['best_effort']}]
 
 		for i in range (0, len(temp)):
-			retVal.append({i + 1: sorted(temp, key = lambda e:  e['best_effort'], cmp = _cmp_delivery)[i]})
+			retVal.append({str(i + 1): sorted(temp, key = lambda e:  e['best_effort'], cmp = _cmp_delivery)[i]})
 		return {'leaderboard':retVal}
 
 	def current_leader(self):
