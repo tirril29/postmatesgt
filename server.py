@@ -192,11 +192,15 @@ def deleteall():
 	return jsonify({'value': 'success'}), 200
 
 @app.route('/get', methods = ['GET', 'POST'])
-def get():
-	if not request.json:
+def get_p():
+	if not request.json or not 'name' in request.json:
 		return jsonify('Needs a JSON request in the form of {"name": <name>}\n'), 500
 	else:
 		return jsonify(state.get(request.json['name'])), 200
+
+@app.route('/get/<name>')
+def get():
+	return jsonify(state.get(name)), 200
 
 
 @app.after_request
