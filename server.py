@@ -112,8 +112,7 @@ class logic:
 		elif _cmp_delivery(self.brd[name]['best_effort'], entry) > 0:
 			self.brd[name] = {'best_effort': entry, 'perf_hist': self.brd[name]['perf_hist'] + [entry['time']]}
 		else:
-			# do nothing
-			return
+			self.brd[name]['perf_hist'] = self.brd[name]['perf_hist'] + [entry['time']]
 
 	def ldrbrd(self):
 		def timeDiff(a, b):
@@ -145,9 +144,16 @@ class logic:
 	def jobs(self):
 		return {'job': [k for k, _ in self.map.iteritems()]}
 
-        def delall(self):
-                self.map = {}
-                self.brd = {}
+	def delall(self):
+		self.map = {}
+		self.brd = {}
+
+    def get(self, name):
+    	return {'name': self.brd[name], 'best_effort': self.brd[name]['best_effort'], 'perf_hist': self.brd[name]['perf_hist']} if name in self.brd else {'value':'Failure.'}
+
+
+
+
 
 
 state = logic()
@@ -184,6 +190,14 @@ def jobs():
 def deleteall():
 	state.delall()
 	return jsonify({'value': 'success'}), 200
+
+@app.route('/get', methods = ['GET', 'POST'])
+def get():
+	if not request.json:
+		return jsonify('Needs a JSON request in the form of {"name": <name>}\n'), 500
+	else:
+		return jsonify(state.get(request.json['name'])), 200
+
 
 @app.after_request
 def after_request(response):
