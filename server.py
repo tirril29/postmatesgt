@@ -47,11 +47,11 @@ class logic:
 				{'point': _make_pt(json['data']['courier']['location'], json['created'])}
 				]
 			}
-		elif json['delivery_id'] in self.map and 'status' in json and json['data']['status'] == 'dropoff':
+		elif json['delivery_id'] in self.map and 'data' in json and 'status' in json and json['data']['status'] == 'dropoff':
         		self.map[json['delivery_id']]['points'].append(
         			{'point': _make_pt(json['data']['courier']['location'], json['created'])}
         		)
-		elif 'data' in json and json['status'] == 'delivered':
+		elif 'status' in json and json['status'] == 'delivered':
 			if json['delivery_id'] in self.map and self.map[json['delivery_id']]['end_time'] == '':
 				# easier reference. 
 				me = self.map[json['delivery_id']]
