@@ -10,10 +10,12 @@ class logic:
 	def __init__(self):
 		self.map = {}
 		self.brd = {}
-		sid = ""
-		sec = ""
+		exec(open('./twilio.json').read())
+		print
+		sid = x['twilio']['account_sid']
+		sec = x['twilio']['secret']
 
-		#self.twilio = TwilioRestClient(sid, sec)
+		self.twilio = TwilioRestClient(sid, sec)
 
 
 	def update(self, json):
@@ -47,7 +49,7 @@ class logic:
 				{'point': _make_pt(json['data']['courier']['location'], json['created'])}
 				]
 			}
-		elif json['delivery_id'] in self.map and 'data' in json and 'status' in json and json['data']['status'] == 'dropoff':
+		elif json['delivery_id'] in self.map and 'data' in json and 'status' in json['data'] and json['data']['status'] == 'dropoff':
         		self.map[json['delivery_id']]['points'].append(
         			{'point': _make_pt(json['data']['courier']['location'], json['created'])}
         		)
@@ -61,6 +63,7 @@ class logic:
 				me['time'] = str(timeDiff(me['start_time'], 
 					me['end_time']))
 				# Add to leaderboard. 
+				me['points'].append(_make_pt(json['data']['dropoff']['location'], json['created']))
 				self.add(me)
 
 				me = self.brd[me['courier']['name']]
@@ -81,7 +84,7 @@ class logic:
 				phone_number = '3476337300'
 				if not me['best_effort']['courier']['phone_number'] == '':
 					phone_number = me['best_effort']['courier']['phone_number']
-				#message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
+				message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
 
 				print msg
 				# TO DO: Twilio integration. 
