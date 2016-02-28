@@ -79,7 +79,8 @@ class logic:
 					else:
 						msg = msg + "you set a personal record! You are " + _sub_delivery(me['best_effort'], current_leader['1']['best_effort']) + " behind the current leader.\n"
 				else:
-					msg = msg + "you are " + _sub_delivery(self.map[json['delivery_id']],me['best_effort']) + " behind your personal record. "
+					msg = msg + "you are " + _sub_delivery(self.map[json['delivery_id']], me['best_effort']) + " behind your personal record. "
+
 					# You set a new PR! You are x off from the leader. 
 					# You are X off from your personal record. 
 				phone_number = '3476337300'
