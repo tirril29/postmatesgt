@@ -13,7 +13,7 @@ class logic:
 		sid = ""
 		sec = ""
 
-		self.twilio = TwilioRestClient(sid, sec)
+		#self.twilio = TwilioRestClient(sid, sec)
 
 
 	def update(self, json):
@@ -32,15 +32,17 @@ class logic:
 			d1_time = timeDiff(d1['start_time'], d1['end_time'])
 			return str(d0_time - d1_time)
 
+		def _make_pt(location, stamp):
+			return {'lat': location['lat'], 'lng': location['lng'], 'time': stamp}
+
 		self.state = json
 		if 'status' in json and json['status'] == 'pickup_complete':
 			# Add start time. 
 			self.map[json['delivery_id']] = {'start_time': json['created'], 'end_time': '', 'courier': json['data']['courier'], 'id':json['delivery_id'], 'points': [
-                                {'point': {'latitude': json['data']['courier']['lat'], 'longitude': json['data']['courier']['lng'], 'timestamp': json['created']}}
-]}
-                elif json['delivery_id'] in self.map and 'status' in json and json['status'] == 'dropoff':
-                        self.map[json['delivery_id']]['points'].append({'point':{'latitude': json['data']['courier']['lat'], 'longitude': json['data']['courier']['lng'], 'timestamp': json['created']}})
-		elif 'status' in json and json['status'] == 'delivered':
+                                {'point': _make_pt(json['data']['courier']['location'], json['created'])}
+        elif json['delivery_id'] in self.map and 'status' in json and json['data']['status'] == 'dropoff':
+        		self.map[json['delivery_id']]['points'].append({'point': _make_pt(json['data']['courier']['location'], json['created'])})
+		elif 'data' in json and json['status'] == 'delivered':
 			if json['delivery_id'] in self.map and self.map[json['delivery_id']]['end_time'] == '':
 				# easier reference. 
 				me = self.map[json['delivery_id']]
@@ -70,7 +72,7 @@ class logic:
 				phone_number = '3476337300'
 				if not me['best_effort']['courier']['phone_number'] == '':
 					phone_number = me['best_effort']['courier']['phone_number']
-				message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
+				#message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
 
 				print msg
 				# TO DO: Twilio integration. 
