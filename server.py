@@ -39,7 +39,7 @@ class logic:
 		if 'status' in json and json['status'] == 'pickup_complete':
 			# Add start time. 
 			self.map[json['delivery_id']] = {'start_time': json['created'], 'end_time': '', 'courier': json['data']['courier'], 'id':json['delivery_id'], 'points': [
-                                {'point': _make_pt(json['data']['courier']['location'], json['created'])}}
+                                {'point': _make_pt(json['data']['courier']['location'], json['created'])}]}
         elif json['delivery_id'] in self.map and 'status' in json and json['data']['status'] == 'dropoff':
         		self.map[json['delivery_id']]['points'].append({'point': _make_pt(json['data']['courier']['location'], json['created'])})
 		elif 'data' in json and json['status'] == 'delivered':
