@@ -199,7 +199,7 @@ def get_p():
 		return jsonify(state.get(request.json['name'])), 200
 
 @app.route('/get/<name>')
-def get():
+def get(name):
 	return jsonify(state.get(name)), 200
 
 
