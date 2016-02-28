@@ -1,7 +1,8 @@
-loadDoc("http://ec2-50-112-190-90.us-west-2.compute.amazonaws.com:5000/getAll");
+loadDoc("http://ec2-50-112-190-90.us-west-2.compute.amazonaws.com:5000/newest");
 
 function click(name) {
-    document.getElementById("name").innerHTML = name.toString();
+    document.getElementById("name").innerHTML = name;
+	console.log("tesst");
 }
 
 function loadDoc(url) {
@@ -12,9 +13,11 @@ function loadDoc(url) {
      var json = JSON.parse(arr.toString());
 
         for(var i = 0; i < json.users.length; i++){
-	    var row = "<a href='#' onclick=\"click("+json.users[i]+");\">" + json.users[i] +"</a>";
+	    //var row = "<a onclick=\"click("+"&quot;test&quot;"+"); return false;\">" + json.users[i] +"</a>";
            // var row = "<a class=\"list\" href='#'>" + json.users[i] + "</a>";
-	    document.getElementById("myDropdown").innerHTML += row;
+	    //document.getElementById("myDropdown").innerHTML += row;
+
+	    
 	 }
     }
   };
