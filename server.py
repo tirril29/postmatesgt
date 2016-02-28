@@ -149,7 +149,7 @@ class logic:
 		self.brd = {}
 
 	def get(self, name):
-		return {'name': self.brd[name], 'best_effort': self.brd[name]['best_effort'], 'perf_hist': self.brd[name]['perf_hist']} if name in self.brd else {'value':'Failure.'}
+		return {'name': name, 'best_effort': self.brd[name]['best_effort'], 'perf_hist': self.brd[name]['perf_hist']} if name in self.brd else {'value':'Failure.'}
 
 
 
