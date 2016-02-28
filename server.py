@@ -63,7 +63,7 @@ class logic:
 				me['time'] = str(timeDiff(me['start_time'], 
 					me['end_time']))
 				# Add to leaderboard. 
-				me['points'].append(_make_pt(json['data']['dropoff']['location'], json['created']))
+				me['points'].append({'point':_make_pt(json['data']['dropoff']['location'], json['created'])})
 				self.add(me)
 
 				me = self.brd[me['courier']['name']]
@@ -86,7 +86,7 @@ class logic:
 					phone_number = me['best_effort']['courier']['phone_number']
 				message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
 
-				print msg
+				# print msg
 				# TO DO: Twilio integration. 
 				# Contant the driver with some info. 
 				# Remove entry from live list. 
