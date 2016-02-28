@@ -108,9 +108,9 @@ class logic:
 		name = entry['courier']['name']
 		# Add name if it's not in the leaderboard. 
 		if not name in self.brd:
-			self.brd[name] = {'best_effort': entry}
+			self.brd[name] = {'best_effort': entry, 'perf_hist': [entry['time']]}
 		elif _cmp_delivery(self.brd[name]['best_effort'], entry) > 0:
-			self.brd[name] = {'best_effort': entry}
+			self.brd[name] = {'best_effort': entry, 'perf_hist': self.brd[name]['perf_hist'] + [entry['time']]}
 		else:
 			# do nothing
 			return
