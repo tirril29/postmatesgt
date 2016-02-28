@@ -6,7 +6,8 @@
     <title>Postmates Racing</title> 
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-  
+    <link href="leaderboard.css" rel="stylesheet">
+ 
 </head>
  
 <body>
@@ -15,11 +16,11 @@
         <div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/index">Home</a>
+                    <li role="presentation"><a href="index.html">Home</a>
                     </li>
-                    <li role="presentation"><a href="/courseMap">Course Map</a>
+                    <li role="presentation"><a href="courseMap.html">Course Map</a>
                     </li>
-		    <li role="presentation" class="active"><a href="/leaderboard">Leaderboard</a>
+		    <li role="presentation" class="active"><a href="leaderboard.html">Leaderboard</a>
                     </li>
                 </ul>
             </nav>
@@ -34,14 +35,14 @@
 	<th>Position</th>
 	<th>Photo</th>
 	<th>Vehicle</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Latest Course Time</th>
-	<th>Best Course Time</th>
+        <th>Name</th>
+	<th>Time Taken</th>
+        <th>Start Time</th>
+	<th>End Time</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
+    <tbody id="board">
+<!--      <tr>
 	<td>1</td>
 	<td></td>
 	<td>Car</td>
@@ -49,12 +50,11 @@
         <td>Doe</td>
         <td>18:12</td>
 	<td>9:08</td>
-      </tr>
+      </tr>-->
       </tbody>
   </table>
 	    </div>
-	</div>
- 
+	</div> 
  
  
         <footer class="footer">
@@ -62,6 +62,7 @@
         </footer>
  
     </div>
+<script src="leaderboard.js"></script>
 </body>
  
 </html>
