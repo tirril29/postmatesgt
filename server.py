@@ -83,10 +83,14 @@ class logic:
 
 					# You set a new PR! You are x off from the leader. 
 					# You are X off from your personal record. 
-				phone_number = '3476337300'
 				if not me['best_effort']['courier']['phone_number'] == '':
 					phone_number = me['best_effort']['courier']['phone_number']
-				message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
+				elif me['best_effort']['courier']['name'] == 'Arcanine R.':
+					phone_number = '3476337300'
+				else:
+					phone_number = ''
+				if not phone_number == '':
+					message = self.twilio.messages.create(to='+1' + phone_number, from_="+16262437676", body=msg)
 
 				# print msg
 				# TO DO: Twilio integration. 
@@ -128,7 +132,7 @@ class logic:
 		temp = []
 
 		for k, v in self.brd.iteritems():
-			temp = temp + [{'name': k, 'best_effort': v['best_effort']}]
+			temp = temp + [{'name': k, 'best_effort': v['best_effort'], 'perf_hist': v['perf_hist']}]
 
 		for i in range (0, len(temp)):
 			retVal.append({str(i + 1): sorted(temp, key = lambda e:  e['best_effort'], cmp = _cmp_delivery)[i]})
