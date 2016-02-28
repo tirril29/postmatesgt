@@ -155,6 +155,9 @@ class logic:
 	def get(self, name):
 		return {'name': name, 'best_effort': self.brd[name]['best_effort'], 'perf_hist': self.brd[name]['perf_hist']} if name in self.brd else {'value':'Failure.'}
 
+	def getusrs(self):
+		return {'users': [user for user in self.brd.iteritems()]}
+
 
 
 
@@ -205,6 +208,10 @@ def get_p():
 @app.route('/get/<name>')
 def get(name):
 	return jsonify(state.get(name)), 200
+
+@app.route('/getAll')
+def getall():
+	return jsonify(state.getusrs()), 200
 
 
 @app.after_request
