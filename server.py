@@ -68,7 +68,8 @@ class logic:
 
 				me = self.brd[me['courier']['name']]
 
-				msg = me['best_effort']['courier']['name'] + ', '
+				msg = me['courier']['name'] + ', '
+				# print me 
 
 				if me['best_effort']['id'] == json['delivery_id']:
 					current_leader = self.current_leader()
@@ -108,7 +109,7 @@ class logic:
 		if not name in self.brd:
 			self.brd[name] = {'best_effort': entry}
 		elif _cmp_delivery(self.brd[name]['best_effort'], entry) > 0:
-			self.brd[name] = entry
+			self.brd[name] = {'best_effort': entry}
 		else:
 			# do nothing
 			return
