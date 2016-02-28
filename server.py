@@ -68,8 +68,8 @@ class logic:
 
 				me = self.brd[me['courier']['name']]
 
-				msg = me['courier']['name'] + ', '
-				# print me 
+				msg = me['best_effort']['courier']['name'] + ', '
+				#print me 
 
 				if me['best_effort']['id'] == json['delivery_id']:
 					current_leader = self.current_leader()
