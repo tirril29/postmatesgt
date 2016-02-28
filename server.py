@@ -123,7 +123,7 @@ class logic:
 		return {'map': self.map, 'brd': self.brd}
 
 	def jobs(self):
-		return {'job': [k for k, _ in map.iteritems()]}
+		return {'job': [k for k, _ in self.map.iteritems()]}
 
         def delall(self):
                 self.map = {}
