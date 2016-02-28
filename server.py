@@ -183,7 +183,7 @@ def jobs():
 @app.route('/deleteall', methods = ['DELETE'])
 def deleteall():
 	state.delall()
-    return jsonify({'value': 'success'}), 200
+	return jsonify({'value': 'success'}), 200
 
 @app.after_request
 def after_request(response):
